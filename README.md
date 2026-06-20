@@ -9,6 +9,7 @@ All physics is hand-written in the render loop — **no external physics engine*
 
 ## Group Members
 - Yotam Markman (ID: 322632266)
+- Shachar Ben Zur (ID: 212373005)
 
 ## How to Run
 1. Make sure you have Node.js installed.

@@ -717,7 +717,7 @@ let followCam = false;                        // bonus: follow-the-ball camera
 const CAMERA_PRESETS = {
   bowler:   { pos: [0, 5, 12],     target: [0, 0.5, -28] },
   overhead: { pos: [0, 48, -26],   target: [0, 0, -28] },
-  pinEnd:   { pos: [0, 4, -68],    target: [0, 1, -58] },
+  pinEnd:   { pos: [0, 2, -63],    target: [0, 1, -50] },
   side:     { pos: [14, 7, -28],   target: [0, 1, -28] },
   rack:     { pos: [-2.6, 2.5, 11], target: [-4.8, 1.3, 5.0] },
 };
