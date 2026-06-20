@@ -12,6 +12,12 @@ const app = express()
 const port = 8000
 
 app.use("/src", express.static(__dirname + "/src"));
+// Serve ONLY the stylesheet from the project root. Mounting the whole
+// directory would expose index.js, package.json, docs, etc., so use a
+// narrowly-scoped route instead.
+app.get('/style.css', (req, res) => {
+    res.sendFile(path.join(__dirname, 'style.css'));
+  })
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/index.html'));

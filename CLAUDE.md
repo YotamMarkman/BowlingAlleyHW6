@@ -4,17 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Computer Graphics course Exercise 6: an interactive WebGL bowling game built with THREE.js
-(r128 via CDN). HW06 builds on HW05 (the static bowling alley). Students take their finished
-HW05 scene and add the interactive game layer: aiming + power controls, a rolling ball with
-simplified hand-written physics, pin collision and toppling, and a full 10-frame scoring
-system. There is no external physics engine — all motion and collision are hand-written in
-the `animate()` loop using delta time.
+Computer Graphics course Exercise 6: an interactive WebGL bowling game built with THREE.js (r160 via import map). It extends the static HW05 alley with a full playable game — aim/spin controls, an oscillating power meter, hand-written ball physics, ball↔pin and pin↔pin collision with topple animation, and a ten-frame scoring system. All physics is hand-written in `animate()` (no external physics engine), per the assignment.
 
 ## Running the Application
 
 ```bash
-npm install
 node index.js
 # Open http://localhost:8000 in browser
 ```
@@ -23,40 +17,30 @@ No build step. Express serves `index.html` at root and static files from `/src`.
 
 ## Architecture
 
-- `index.js` — Express server (port 8000), serves static files from `/src`
-- `index.html` — Loads THREE.js from CDN, then `src/hw6.js` as ES module
-- `src/hw6.js` — Main scene file. All student work goes here. Ships with the bare HW05
-  starter lane plus `// TODO (HW06)` scaffold regions for game state, the power meter,
-  input handling, physics/collision, and scoring. Students paste their completed HW05
-  scene in first, then implement the interactive systems.
-- `src/OrbitControls.js` — THREE.js OrbitControls (vendored, do not modify)
+- `index.js` — Express server (port 8000), serves `index.html`, `/style.css`, and static files from `/src`
+- `index.html` — Import map for THREE.js r160 + addons, the UI overlays (scorecard, status banner, power meter, controls panel, message), then loads `src/hw6.js` as an ES module
+- `src/hw6.js` — The whole game: static scene (lane, markings, gutters, pins, ball, lights, bonus props) plus the HW06 interactive layer (state machine, input, physics, collision/toppling, scoring, UI rendering, render loop)
+- `style.css` — UI overlay styling
+- `src/OrbitControls.js` — legacy r128 vendored controls, kept for reference but UNUSED (the game imports OrbitControls from the r160 addons via the import map)
 
-THREE.js is loaded globally via CDN `<script>` tag (not imported as a module), so `THREE`
-is available as a global. OrbitControls is imported as an ES module from the local file.
+THREE.js is imported as an ES module (`import * as THREE from 'three'`); there is no global `THREE`. OrbitControls comes from `three/addons/controls/OrbitControls.js`.
+
+## Game architecture (src/hw6.js)
+
+- Phase state machine: `aiming → power → rolling → resolving → (aiming | gameover)` held in `gameState.phase`
+- Physics is integrated each frame in `animate()` via a `THREE.Clock` delta, sub-stepped in `stepRoll()` to prevent tunnelling
+- Pins are runtime records in the `pins[]` array (`standing`/`falling`/topple `axis`+`angle`); `topplePin()` handles ball→pin and pin→pin propagation
+- Scoring lives in pure, testable functions: `recordRoll()` (frame flow), `computeFrameTotals()` (cumulative totals), `formatFrame()`/`formatTenth()` (X / `/` / `-` notation)
 
 ## Code Style
 
 - ES modules (`import`/`export`)
 - 2-space indentation
-- camelCase for functions (e.g., `degreesToRadians`)
+- camelCase for functions
 - THREE.js naming conventions for objects (Scene, Camera, Mesh, etc.)
-- Helper: `degrees_to_radians()` already exists in hw6.js
+- Helper: `degrees_to_radians()` exists in hw6.js
 
-## Key Interactions (HW06)
+## Key Interactions
 
-- Aim/move the ball along the foul line, set power via an oscillating meter, release
-- 'O' toggles orbit camera (carried over from HW05)
-- 'R' resets pins / starts a new game
-- All 3D objects should cast/receive shadows; scene is responsive to window resize
-
-## Physics Approach
-
-Simplified, hand-written physics only — **do NOT add a physics engine** (no cannon-es,
-ammo.js, etc.). Integrate the ball's position from velocity using delta time, detect
-gutter balls by lane-edge bounds, and use sphere-vs-cylinder distance tests for ball–pin
-and pin–pin collisions. Topple pins by animating a rotation about the contact axis.
-
-## Coordinate System (shared with HW05)
-
-Foul line at Z=0, lane extends to negative Z, head pin ≈ Z=-57. Keep this so HW05 work
-carries over directly.
+- `← →` aim, `↑ ↓` spin, `Space` power-then-release, `R` new game, `O` toggle orbit, `C` follow-cam, `1`–`5` camera presets
+- All 3D objects cast/receive shadows; the scene is responsive to window resize

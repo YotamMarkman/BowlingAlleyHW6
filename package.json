@@ -1,7 +1,7 @@
 {
-  "name": "cg_ex6",
+  "name": "cg_ex5",
   "version": "1.0.0",
-  "description": "exercise 6 in Computer Graphics course - interactive bowling game",
+  "description": "exercise 5 in Computer Graphics course",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,6 +11,6 @@
   "type": "module",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.22.2"
   }
 }

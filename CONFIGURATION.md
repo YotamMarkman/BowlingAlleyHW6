@@ -1,14 +1,13 @@
 # Project Configuration
 
 ## Commands
-- `npm install` - Install dependencies (Express)
 - `node index.js` - Start the application (serves on port 8000)
 - Access via browser at `http://localhost:8000`
 
 ## Project Structure
-- WebGL 3D interactive game using THREE.js
-- Scene + game logic in `/src/hw6.js`
-- OrbitControls for camera manipulation
+- WebGL 3D graphics application using THREE.js r160 (loaded via import map)
+- Interactive bowling game implemented in `/src/hw6.js`
+- OrbitControls (r160 addons) for camera manipulation
 
 ## Code Style Guidelines
 - ES modules (import/export)
@@ -23,7 +22,6 @@
 - Comments for explaining complex sections or calculations
 
 ## Implementation Notes
-- Toggle orbit camera with 'o' key; reset / new game with 'r' key
-- Game simulation (ball motion, collisions, toppling) advances in the animate() loop
-- Simplified, hand-written physics — no external physics engine
+- Toggle orbit camera with 'o' key; aim with arrows, charge/release with Space, reset with 'r'
+- Main rendering and hand-written physics happen in the animate() function (delta-time integration)
 - Scene interactions should follow THREE.js patterns

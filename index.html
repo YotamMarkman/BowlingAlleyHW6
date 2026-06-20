@@ -1,15 +1,90 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>HW6 - Bowling Game</title>
-		<style>
-			body { margin: 0; }
-		</style>
-		<script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'></script>
-	</head>
-	<body>
-		<script src="src/hw6.js" type="module"></script>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HW6 — Interactive 3D Bowling Game</title>
+    <link rel="stylesheet" href="style.css" />
 
-	</body>
+    <!--
+      Import map: load Three.js r160 (>= r150) and its addons (OrbitControls)
+      as ES modules from a CDN. This replaces the legacy global <script> build.
+    -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <!-- =====================================================================
+         UI OVERLAYS (HTML/CSS shell; the game logic in src/hw6.js drives them).
+         ===================================================================== -->
+
+    <!-- Status banner (top center): current frame + the active control hint. -->
+    <div id="status-banner" class="ui-overlay"></div>
+
+    <!-- Transient message (STRIKE! / SPARE! / GUTTER BALL / GAME OVER). -->
+    <div id="message" class="ui-overlay"></div>
+
+    <!-- Live 10-frame scorecard (filled by the game). -->
+    <div id="scorecard" class="ui-overlay">
+      <div class="scorecard-title">Scorecard</div>
+      <table class="scorecard-table">
+        <thead>
+          <tr>
+            <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+            <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Frames 1-9: two rolls each. Frame 10: three rolls. -->
+          <tr class="frame-rolls">
+            <td><span></span><span></span></td>
+            <td><span></span><span></span></td>
+            <td><span></span><span></span></td>
+            <td><span></span><span></span></td>
+            <td><span></span><span></span></td>
+            <td><span></span><span></span></td>
+            <td><span></span><span></span></td>
+            <td><span></span><span></span></td>
+            <td><span></span><span></span></td>
+            <td class="frame-ten"><span></span><span></span><span></span></td>
+          </tr>
+          <tr class="frame-total">
+            <td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Power meter (bottom center): oscillates while charging, locks on release. -->
+    <div id="power-meter" class="ui-overlay">
+      <div class="pm-label">POWER</div>
+      <div class="pm-track"><div id="power-fill" class="pm-fill"></div></div>
+    </div>
+
+    <!-- Controls / instructions panel. -->
+    <div id="controls-panel" class="ui-overlay">
+      <div class="controls-title">Controls</div>
+      <ul>
+        <li><kbd>←</kbd><kbd>→</kbd> — aim ball</li>
+        <li><kbd>↑</kbd><kbd>↓</kbd> — spin / hook</li>
+        <li><kbd>Space</kbd> — power meter, then release</li>
+        <li><kbd>R</kbd> — reset pins / new game</li>
+        <li><kbd>O</kbd> — toggle orbit camera</li>
+        <li><kbd>C</kbd> — follow-ball camera</li>
+        <li><kbd>1</kbd>–<kbd>5</kbd> — camera presets</li>
+      </ul>
+      <div class="controls-note">Aim, charge power with Space, and release.</div>
+    </div>
+
+    <!-- Main game module. -->
+    <script type="module" src="src/hw6.js"></script>
+  </body>
 </html>
